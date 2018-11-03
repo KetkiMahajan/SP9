@@ -2,15 +2,21 @@
  *  @author
  */
 
+import java.util.Arrays;
 import java.util.Random;
 
 public class SP9 {
     public static Random random = new Random();
     public static int numTrials = 100;
     public static void main(String[] args) {
-        int n = 10;  int choice = 1 + random.nextInt(4);
-        if(args.length > 0) { n = Integer.parseInt(args[0]); }
-        if(args.length > 1) { choice = Integer.parseInt(args[1]); }
+        int n = 10;
+        int choice = 1 + random.nextInt(4);
+        if(args.length > 0) {
+            n = Integer.parseInt(args[0]);
+        }
+        if(args.length > 1) {
+            choice = Integer.parseInt(args[1]);
+        }
         int[] arr = new int[n];
         for(int i=0; i<n; i++) {
             arr[i] = i;
@@ -21,6 +27,7 @@ public class SP9 {
                 Shuffle.shuffle(arr);
                 numTrials = 1;
                 insertionSort(arr);
+                System.out.println(Arrays.toString(arr));
                 break;
             case 2:
                 for(int i=0; i<numTrials; i++) {
@@ -36,7 +43,16 @@ public class SP9 {
     }
 
     public static void insertionSort(int[] arr) {
-        System.out.println("In Sort");
+        for(int i=1; i < arr.length; i++)
+        {
+            int temp= arr[i];
+            int j=i-1;
+            while(j>=0 && temp<=arr[j]){
+                arr[j+1]=arr[j];
+                j--;
+            }
+            arr[j+1] = temp;
+        }
     }
 
     public static void mergeSort1(int[] arr) {
