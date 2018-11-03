@@ -22,7 +22,7 @@ public class SP9 {
             arr[i] = i;
         }
         Timer timer = new Timer();
-        switch(1) {
+        switch(2) {
             case 1:
                 Shuffle.shuffle(arr);
                 numTrials = 1;
@@ -33,7 +33,9 @@ public class SP9 {
                 for(int i=0; i<numTrials; i++) {
                     Shuffle.shuffle(arr);
                     mergeSort1(arr);
+
                 }
+                System.out.println(Arrays.toString(arr));
                 break;  // etc
         }
         timer.end();
@@ -56,9 +58,34 @@ public class SP9 {
     }
 
     public static void mergeSort1(int[] arr) {
+        mergeSort(arr,0,arr.length-1);
     }
 
+    private static void mergeSort(int[] arr, int p, int r) {
+        int q=0;
+        if(p<r){
+            q=(p+r)/2;
+            mergeSort(arr,p,q);
+            mergeSort(arr,q+1,r);
+            merge(arr,p,q,r);
+        }
+    }
 
+    private static void merge(int[] arr, int p, int q, int r) {
+        int[] L= new int[q-p+1];
+        int[] R= new int[r-q];
+        System.arraycopy(arr,p,L,0,q-p+1);
+        System.arraycopy(arr,q+1,R,0,r-q);
+
+        int i=0, j=0;
+        for(int k=p; k<=r; k++){
+                if(j>=R.length || (i<L.length && L[i]<=R[j])){
+                arr[k]=L[i++];
+            }else{
+                arr[k]=R[j++];
+            }
+        }
+    }
     /** Timer class for roughly calculating running time of programs
      *  @author rbk
      *  Usage:  Timer timer = new Timer();
