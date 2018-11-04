@@ -22,18 +22,25 @@ public class SP9 {
             arr[i] = i;
         }
         Timer timer = new Timer();
-        switch(2) {
+        switch(3) {
             case 1:
                 Shuffle.shuffle(arr);
                 numTrials = 1;
-                insertionSort(arr);
-                System.out.println(Arrays.toString(arr));
+                insertionSort(arr,0,arr.length);
+                //System.out.println(Arrays.toString(arr));
                 break;
             case 2:
                 for(int i=0; i<numTrials; i++) {
                     Shuffle.shuffle(arr);
                     mergeSort1(arr);
 
+                }
+                //System.out.println(Arrays.toString(arr));
+                break;  // etc
+            case 3:
+                for(int i=0; i<numTrials; i++) {
+                    Shuffle.shuffle(arr);
+                    mergeSort2(arr);
                 }
                 System.out.println(Arrays.toString(arr));
                 break;  // etc
@@ -44,8 +51,39 @@ public class SP9 {
         System.out.println("Choice: " + choice + "\n" + timer);
     }
 
-    public static void insertionSort(int[] arr) {
-        for(int i=1; i < arr.length; i++)
+    private static void mergeSort2(int[] arr) {
+        int[] B= new int[arr.length];
+        mergeSort2(arr,B,0,arr.length-1);
+    }
+
+    private static void mergeSort2(int[] arr, int[] b, int left, int n) {
+        if(n<4){
+            insertionSort(arr,left,left+n-1);
+        }else{
+            int mid= n/2;
+            mergeSort2(arr,b,left,mid);
+            mergeSort2(arr,b,left+mid,n-mid);
+
+            merge2(arr,b,left,left+mid-1,left+n-1);
+        }
+    }
+
+    private static void merge2(int[] A, int[] B, int p, int q, int r) {
+        System.arraycopy(A,p,B,p,r-p+1);
+
+        int i=p, j=q+1;
+        for(int k=p; k<=r; k++){
+            if(j>r || (i<=q && B[i]<=B[j])){
+                A[k]=B[i++];
+            }else{
+                A[k]=B[j++];
+            }
+        }
+
+    }
+
+    public static void insertionSort(int[] arr,int p,int r) {
+        for(int i=p+1; i < r; i++)
         {
             int temp= arr[i];
             int j=i-1;
