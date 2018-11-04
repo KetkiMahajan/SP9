@@ -1,5 +1,7 @@
 /** Sample starter code for SP9.
- *  @author
+ *  @author :
+ *  Ketki Mahajan
+ *  Anirudh Erabelly
  */
 
 import java.util.Arrays;
@@ -9,7 +11,7 @@ public class SP9 {
     public static Random random = new Random();
     public static int numTrials = 100;
     public static void main(String[] args) {
-        int n = 10;
+        int n = 49;
         int choice = 1 + random.nextInt(4);
         if(args.length > 0) {
             n = Integer.parseInt(args[0]);
@@ -22,7 +24,7 @@ public class SP9 {
             arr[i] = i;
         }
         Timer timer = new Timer();
-        switch(2) {
+        switch(choice) {
             case 1:
                 Shuffle.shuffle(arr);
                 numTrials = 1;
@@ -33,45 +35,64 @@ public class SP9 {
                 for(int i=0; i<numTrials; i++) {
                     Shuffle.shuffle(arr);
                     mergeSort1(arr);
-
+                    System.out.println(Arrays.toString(arr));
                 }
-                System.out.println(Arrays.toString(arr));
                 break;  // etc
+            case 3:
+                for(int i=0; i<numTrials; i++) {
+                    Shuffle.shuffle(arr);
+                    mergeSort2(arr);
+                    System.out.println(Arrays.toString(arr));
+                }
+                break;
+            case 4:
+                for(int i=0; i<numTrials; i++) {
+                    Shuffle.shuffle(arr);
+                    mergeSort3(arr);
+                    System.out.println(Arrays.toString(arr));
+                }
+                break;
         }
         timer.end();
         timer.scale(numTrials);
 
         System.out.println("Choice: " + choice + "\n" + timer);
     }
-
+    
+    //Insertionsort Implementation
     public static void insertionSort(int[] arr) {
-        for(int i=1; i < arr.length; i++)
+        insertionSort(arr, 0, arr.length-1);
+    }
+    
+    private static void insertionSort(int[] arr, int start, int end) {
+    	for(int i=1; i <= end; i++)
         {
             int temp= arr[i];
             int j=i-1;
-            while(j>=0 && temp<=arr[j]){
+            while(j>=0 && temp<arr[j]){
                 arr[j+1]=arr[j];
                 j--;
             }
             arr[j+1] = temp;
         }
     }
-
+    
+    //mergesort(Take 1) Implementation
     public static void mergeSort1(int[] arr) {
-        mergeSort(arr,0,arr.length-1);
+        mergeSort1(arr,0,arr.length-1);
     }
 
-    private static void mergeSort(int[] arr, int p, int r) {
+    private static void mergeSort1(int[] arr, int p, int r) {
         int q=0;
         if(p<r){
             q=(p+r)/2;
-            mergeSort(arr,p,q);
-            mergeSort(arr,q+1,r);
-            merge(arr,p,q,r);
+            mergeSort1(arr,p,q);
+            mergeSort1(arr,q+1,r);
+            merge1(arr,p,q,r);
         }
     }
 
-    private static void merge(int[] arr, int p, int q, int r) {
+    private static void merge1(int[] arr, int p, int q, int r) {
         int[] L= new int[q-p+1];
         int[] R= new int[r-q];
         System.arraycopy(arr,p,L,0,q-p+1);
@@ -86,6 +107,76 @@ public class SP9 {
             }
         }
     }
+    
+    //mergesort(Take 2) Implementation
+    public static void mergeSort2(int[] arr) {
+    	int[] arrCopy = new int[arr.length];
+    	mergeSort2(arr, arrCopy, 0, arr.length-1); 
+    }
+    
+    private static void mergeSort2(int[] arr, int[] aux, int start, int end) {
+    	if((end - start + 1) < 5) {
+    		insertionSort(arr, start, end);
+    	}
+    	else {
+    		int mid = (end+start)/2;
+    		mergeSort2(arr, aux, start, mid);
+    		mergeSort2(arr, aux, mid+1, end);
+    		merge2(arr, aux, start, mid, end);
+    	}
+    }
+    
+    private static void merge2(int[] arr, int[] aux, int start, int mid, int end) {
+    	System.arraycopy(arr, start, aux, start, end-start+1);
+    	int i = start, j = mid+1;
+    	for(int k = start; k<=end; k++) {
+    		if( (j > end) || (i <= mid && aux[i] <= aux[j])) {
+    			arr[k] = aux[i++];
+    		}
+    		else {
+    			arr[k] = aux[j++];
+    		}
+    	}
+    }
+    
+    //mergesort(Take 3) Implementation
+    public static void mergeSort3(int[] arr) {
+    	int[] arrCopy = new int[arr.length];
+    	System.arraycopy(arr, 0, arrCopy, 0, arr.length);
+    	mergeSort3(arr, arrCopy, 0, arr.length-1);
+    	arr = arrCopy;
+    }
+    
+    private static void mergeSort3(int[] arr, int[] aux, int start, int end) {
+    	if((end - start + 1) < 5) {
+    		insertionSort(arr, start, end);
+    	}
+    	else {
+    		int mid = (end+start)/2;
+    		mergeSort3(arr, aux, start, mid);
+    		mergeSort3(arr, aux, mid+1, end);
+    		merge3(aux, arr, start, mid, end);
+    	}
+    }
+    
+    private static void merge3(int[] arr, int[] aux, int start, int mid, int end) {
+    	int i = start, j = mid+1, k = start;
+    	while(i <= mid && j <= end) {
+    		if(aux[i] <= aux[j]) {
+    			arr[k++] = aux[i++];
+    		}
+    		else {
+    			arr[k++] = aux[j++];
+    		}
+    	}
+    	while(i <= mid) {
+    		arr[k++] = aux[i++];
+    	}
+    	while(j <= end) {
+    		arr[k++] = aux[j++];
+    	}
+    }
+
     /** Timer class for roughly calculating running time of programs
      *  @author rbk
      *  Usage:  Timer timer = new Timer();
